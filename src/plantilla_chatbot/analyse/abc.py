@@ -10,14 +10,14 @@ class Validator:
         self.comment = [line for line in comment.splitlines() if line != ""]
 
     def score(self) -> float:
-        # Get tests
         tests = self._get_tests()
         total_weight = sum(test.__test_weight__ for test in tests)
 
         if total_weight == 0:
             return 0.0
-
+        # Get the result
         score = sum(test.__test_weight__ for test in tests if test())
+
         return score / total_weight
 
     def _get_tests(self) -> list[Test]:
