@@ -10,6 +10,3 @@ class RegexValidator:
     @property
     def score(self) -> int:
         pass
-
-
-comment = RegexValidator("Hola como esta")
