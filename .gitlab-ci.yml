@@ -28,5 +28,8 @@ publish-documentation:
   needs:
     - build-documentation
 
+  variables:
+    PUB_LOCATION: plantilla-chatbot
+
   extends:
     - .docpub:publish-docs
