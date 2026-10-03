@@ -1,13 +1,32 @@
-pages:
+include:
+  - project: 'repos/releng/docpub'
+    file: 'includes/publish.yml'
+
+stages:
+  - docs
+
+build-documentation:
+  stage: docs
   image: python:3.13
 
-  script:
+  before_script:
     - pip install uv
     - uv sync
-    - uv run sphinx-build -b html docs/source public
 
-  pages: true
+  script:
+    - uv run sphinx-build -b html docs/source generated-documentation
 
-  artifacts:
-    paths:
-      - public
+  variables:
+    DOCS_DIR: generated-documentation
+
+  extends:
+    - .docpub:build-docs
+
+publish-documentation:
+  stage: docs
+
+  needs:
+    - build-documentation
+
+  extends:
+    - .docpub:publish-docs
