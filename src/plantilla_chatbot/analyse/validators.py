@@ -12,5 +12,5 @@ class LengthValidator(Validator):
         super(LengthValidator, self).__init__(comment)
 
     @test()
-    def count_lines(self) -> bool:
+    def _count_lines(self) -> bool:
         return len(self.comment) > 3 and len(self.comment) <= 7
