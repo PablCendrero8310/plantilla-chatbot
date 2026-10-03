@@ -1,0 +1,13 @@
+pages:
+  image: python:3.13
+
+  script:
+    - pip install uv
+    - uv sync
+    - uv run sphinx-build -b html docs/source public
+
+  pages: true
+
+  artifacts:
+    paths:
+      - public
