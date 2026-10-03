@@ -4,6 +4,7 @@ include:
 
 stages:
   - docs
+  - deploy
 
 build-documentation:
   stage: docs
@@ -14,16 +15,20 @@ build-documentation:
     - uv sync
 
   script:
-    - uv run sphinx-build -b html docs/source generated-documentation
+    - uv run sphinx-build -b html docs/source public
 
   variables:
-    DOCS_DIR: generated-documentation
+    DOCS_DIR: public
+
+  artifacts:
+    paths:
+      - public
 
   extends:
     - .docpub:build-docs
 
 publish-documentation:
-  stage: docs
+  stage: deploy
 
   needs:
     - build-documentation
@@ -33,3 +38,14 @@ publish-documentation:
 
   extends:
     - .docpub:publish-docs
+
+pages:
+  stage: deploy
+
+  needs:
+    - build-documentation
+
+  script:
+    - echo "Publishing GitLab Pages"
+
+  pages: true
