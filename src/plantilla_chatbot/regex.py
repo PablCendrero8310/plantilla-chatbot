@@ -7,7 +7,7 @@ class RegexValidator(Validator):
     comment: str
 
     def __init__(self, comment: str) -> None:
-        self.comment = comment
+        super(RegexValidator, self).__init__(comment)
 
     def score(self) -> int:
         return 0
