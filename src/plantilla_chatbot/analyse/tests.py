@@ -1,4 +1,6 @@
 # analyse/validators.py
+import re
+
 from plantilla_chatbot.analyse.abc import Tests
 from plantilla_chatbot.analyse.decorators import test
 
@@ -8,7 +10,16 @@ class RegexTests(Tests):
     Pruebas para comprobar expresiones regulares propias de peticiones escritas con IA.
     """
 
-    pass
+    @test()
+    def _pvn_mention(self) -> bool:
+        pattern = r"\b(?:punto\s+de\s+vista\s+neutral|criterios?\s+de\s+(?:(?:verificabilidad|relevancia)\s+)?neutralidad)\b"
+        return bool(
+            re.search(
+                pattern=pattern,
+                string="\n".join(self.comment),
+                flags=re.IGNORECASE | re.VERBOSE,
+            )
+        )
 
 
 class LengthTests(Tests):
