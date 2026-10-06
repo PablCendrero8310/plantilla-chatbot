@@ -10,17 +10,6 @@ class RegexTests(Tests):
     Pruebas para comprobar expresiones regulares propias de peticiones escritas con IA.
     """
 
-    @test()
-    def _pvn_mention(self) -> bool:
-        pattern = r"\b(?:punto\s+de\s+vista\s+neutral|criterios?\s+de\s+(?:(?:verificabilidad|relevancia)\s+)?neutralidad)\b"
-        return bool(
-            re.search(
-                pattern=pattern,
-                string="\n".join(self.comment),
-                flags=re.IGNORECASE | re.VERBOSE,
-            )
-        )
-
 
 class LengthTests(Tests):
     "Pruebas para comprobar patrones de longitud comunes en mensajes escritos con IA."
