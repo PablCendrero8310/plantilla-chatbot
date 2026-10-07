@@ -1,0 +1,3 @@
+[submodule "src/plantilla_chatbot/filters"]
+	path = src/plantilla_chatbot/filters
+	url = git@gitlab-ssh.wikimedia.org:pcendrer/plantilla-chatbot-filtros.git
