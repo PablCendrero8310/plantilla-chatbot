@@ -21,6 +21,36 @@ class RegexTests(Tests):
             )
         )
 
+    @test()
+    def reliable_source_test(self):
+        return bool(
+            re.search(
+                pattern=patterns.RELIABLE_SOURCE_REGEX,
+                string=self.comment,
+                flags=re.IGNORECASE | re.VERBOSE,
+            )
+        )
+
+    @test()
+    def relevance_test(self):
+        return bool(
+            re.search(
+                pattern=patterns.RELEVANCE_REGEX,
+                string=self.comment,
+                flags=re.IGNORECASE | re.VERBOSE,
+            )
+        )
+
+    @test()
+    def coi_test(self):
+        return bool(
+            re.search(
+                pattern=patterns.COI_REGEX,
+                string=self.comment,
+                flags=re.IGNORECASE | re.VERBOSE,
+            )
+        )
+
 
 class LengthTests(Tests):
     "Pruebas para comprobar patrones de longitud comunes en mensajes escritos con IA."
