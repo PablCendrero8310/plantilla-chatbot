@@ -1,7 +1,7 @@
 # analyse/validators.py
 import re
 
-import plantilla_chatbot.filters.regex as patterns
+import plantilla_chatbot.filters.patterns as patterns
 from plantilla_chatbot.analyse.abc import Tests
 from plantilla_chatbot.analyse.decorators import test
 
