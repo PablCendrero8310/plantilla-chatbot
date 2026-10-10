@@ -10,10 +10,12 @@ class Tests:
     Proporciona el separador del comentario en lineas mediante el constructor y la función ``score`` para obtener la puntuación.
     """
 
-    comment: List[str]
+    comment: str
+    comment_lines: List[str]
 
     def __init__(self, comment: str) -> None:
-        self.comment = [line for line in comment.splitlines() if line != ""]
+        self.comment = comment
+        self.comment_lines = [line for line in comment.splitlines() if line != ""]
 
     def score(self) -> float:
         """Función para obtener el resultado de las pruebas obtenido mediante sumar el resultado de cada prueba y dividirlo entre el puntaje máximo.

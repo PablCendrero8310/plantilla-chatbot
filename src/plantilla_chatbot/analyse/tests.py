@@ -16,8 +16,8 @@ class LengthTests(Tests):
 
     @test()
     def _count_lines(self) -> bool:
-        return 7 >= len(self.comment) > 3
+        return 7 >= len(self.comment_lines) > 3
 
     @test(weight=0.5)
     def _count_first_line(self) -> bool:
-        return 4 <= len(self.comment[0].strip()) <= 5
+        return 4 <= len(self.comment_lines[0].strip()) <= 5
