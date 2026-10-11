@@ -6,6 +6,7 @@ import pywikibot
 from pywikibot.bot import SingleSiteBot
 from pywikibot.comms.eventstreams import EventStreams
 
+import plantilla_chatbot.filters.thresholds as thresholds
 from plantilla_chatbot.analyse.tests import RegexTests
 
 
@@ -32,7 +33,10 @@ class PlantillaChatbotBOT(SingleSiteBot):
                 self.site,
                 change["title"],
             )
-            if not self.valid(change):
+            if (
+                not self.valid(change)
+                and not self.score(page) > thresholds.TESTS_THRESHOLD
+            ):
                 continue
             self.treat(page)
 
