@@ -1,0 +1,38 @@
+# toolforge.yaml
+
+version: "1.0"
+
+components:
+  # ┌────────────────────────────────────────────────────────────────────┐
+  # │ CONTINUOUS JOB - PROCESO PERMANENTE                              │
+  # └────────────────────────────────────────────────────────────────────┘
+  - name: plantilla-chatbot-bot
+    type: job
+    command: ["./pyvenv/bin/python", "-m", "plantilla-chatbot"]
+    
+    # ⚠️ IMPORTANTE: marca como continuo
+    continuous: true
+    
+    # Recursos para proceso persistente
+    resources:
+      cpu: "250m"
+      memory: "512Mi"
+    
+    env:
+      - name: MODE
+        value: "continuous"
+      - name: LOG_LEVEL
+        value: "INFO"
+      # OAuth
+      - name: WIKIMEDIA_CONSUMER_KEY
+        value: "${WIKIMEDIA_CONSUMER_KEY}"
+      - name: WIKIMEDIA_CONSUMER_SECRET
+        value: "${WIKIMEDIA_CONSUMER_SECRET}"
+      - name: WIKIMEDIA_ACCESS_KEY
+        value: "${WIKIMEDIA_ACCESS_KEY}"
+      - name: WIKIMEDIA_ACCESS_SECRET
+        value: "${WIKIMEDIA_ACCESS_SECRET}"
+    
+    # Notificaciones de fallos
+    emails:
+      - onfailure  # O "all" para todas las notificaciones

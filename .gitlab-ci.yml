@@ -1,0 +1,63 @@
+# .gitlab-ci.yml
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  TOOL_NAME: "plantilla-chatbot"
+  DOCKER_DRIVER: overlay2
+
+# Build stage - Construye imagen Docker con la imagen oficial de Toolforge
+build_image:
+  stage: build
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - echo "🐳 Pull de imagen base de Toolforge..."
+    - docker pull docker-registry.svc.toolforge.org/toolforge-python313-sssd-web:latest
+    - echo "🐳 Construyendo imagen..."
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
+    - echo "📤 Subiendo imagen al registry de GitLab..."
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - main
+    - merge_requests
+  artifacts:
+    expire_in: 1 week
+
+# Test stage - Ejecuta tests (opcional, usa la imagen local)
+test_code:
+  stage: test
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA || docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+  script:
+    - echo "🧪 Ejecutando tests..."
+    - docker run --rm $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA pytest tests/ -v
+  only:
+    - main
+    - merge_requests
+  allow_failure: true  # Opcional: no bloquea si los tests fallan
+
+# Deploy stage - Usa el script oficial de Toolforge
+deploy_tools:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_TAG
+      when: never
+  variables:
+    TOOLFORGE_IMAGE: "python-3.13"
+include:
+    - project: "repos/cloud/cicd/gitlab-ci"
+      file: "toolforge-cd/deploy-to-toolforge.yaml"
