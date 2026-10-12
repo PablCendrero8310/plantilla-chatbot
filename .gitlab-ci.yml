@@ -15,8 +15,6 @@ build_image:
   image: docker:24-dind
   services:
     - docker:24-dind
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo "🐳 Pull de imagen base de Toolforge..."
     - docker pull docker-registry.svc.toolforge.org/toolforge-python313-sssd-web:latest
