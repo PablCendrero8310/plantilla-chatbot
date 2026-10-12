@@ -7,31 +7,19 @@ stages:
 
 variables:
   TOOL_NAME: "plantilla-chatbot"
-  DOCKER_DRIVER: overlay2
-  
-  OCKER_TLS_CERTDIR: "/certs"
-  DOCKER_HOST: "tcp://docker:2376"
 
 # Build stage - Construye imagen Docker con la imagen oficial de Toolforge
 build_image:
   stage: build
-  image: docker:24-dind
-  services:
-    - docker:24-dind
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   script:
-    - echo "🐳 Pull de imagen base de Toolforge..."
-    - docker pull docker-registry.svc.toolforge.org/toolforge-python313-sssd-web:latest
-    - echo "🐳 Construyendo imagen..."
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
-    - echo "📤 Subiendo imagen al registry de GitLab..."
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   only:
     - main
-    - merge_requests
-  artifacts:
-    expire_in: 1 week
 
 # Test stage - Ejecuta tests (opcional, usa la imagen local)
 test_code:
