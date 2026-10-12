@@ -8,6 +8,9 @@ stages:
 variables:
   TOOL_NAME: "plantilla-chatbot"
   DOCKER_DRIVER: overlay2
+  
+  OCKER_TLS_CERTDIR: "/certs"
+  DOCKER_HOST: "tcp://docker:2376"
 
 # Build stage - Construye imagen Docker con la imagen oficial de Toolforge
 build_image:
