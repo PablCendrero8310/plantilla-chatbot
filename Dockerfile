@@ -12,7 +12,7 @@ RUN chmod +x setup.sh
 
 # Crea y configura el entorno virtual
 # Esto instala las dependencias dentro del contenedor
-RUN setup.sh
+RUN ./setup.sh
 
 # Copia el resto del código
 COPY src/ ./src/
