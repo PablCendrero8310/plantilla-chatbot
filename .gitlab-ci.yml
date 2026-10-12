@@ -15,9 +15,56 @@ build_image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   script:
-    - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    # Debug SEGURO - Solo verificamos LONGITUD y PRIMERA PARTE
+    - |
+      echo "=== DEBUG CI VARIABLES (SEGURO) ==="
+      if [ -n "$CI_REGISTRY_IMAGE" ]; then
+        echo "✓ CI_REGISTRY_IMAGE está definida (longitud: ${#CI_REGISTRY_IMAGE})"
+        echo "  Primeros 50 chars: ${CI_REGISTRY_IMAGE:0:50}..."
+      else
+        echo "❌ CI_REGISTRY_IMAGE está VACÍA"
+      fi
+      
+      if [ -n "$CI_REGISTRY" ]; then
+        echo "✓ CI_REGISTRY está definida"
+      else
+        echo "❌ CI_REGISTRY está VACÍA"
+      fi
+      echo "==================================="
+    
+    # Crear config.json SIN exponer password
+    - |
+      if [ -z "$CI_REGISTRY_IMAGE" ]; then
+        echo "❌ Abortando: CI_REGISTRY_IMAGE no está definida"
+        exit 1
+      fi
+    
+    - |
+      cat > /kaniko/.docker/config.json <<EOF
+      {
+        "auths": {
+          "$CI_REGISTRY": {
+            "username": "$CI_REGISTRY_USER",
+            "password": "$CI_REGISTRY_PASSWORD"
+          }
+        }
+      }
+      EOF
+    
+    # Verificar que el archivo se creó (sin mostrar contenido)
+    - |
+      if [ -f /kaniko/.docker/config.json ]; then
+        echo "✓ config.json creado exitosamente"
+      else
+        echo "❌ ERROR: config.json no fue creado"
+        exit 1
+      fi
+    
+    # Construir imagen
+    - /kaniko/executor \
+        --context "$CI_PROJECT_DIR" \
+        --dockerfile "$CI_PROJECT_DIR/Dockerfile" \
+        --destination "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
   only:
     - main
 
