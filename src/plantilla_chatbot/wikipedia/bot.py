@@ -7,8 +7,9 @@ from typing import Any, Dict
 
 import mwparserfromhell
 import pywikibot
-from pywikibot.bot import BaseSite, SingleSiteBot
+from pywikibot.bot import SingleSiteBot
 from pywikibot.comms.eventstreams import EventStreams
+from pywikibot.site import BaseSite
 
 import plantilla_chatbot.filters.thresholds as thresholds
 from plantilla_chatbot.analyse.tests import RegexTests
@@ -30,6 +31,7 @@ class PlantillaChatbotBOT(SingleSiteBot):
         page.save(summary="Respondiendo autómaticamente a mensaje generado por LLM")
 
     def run(self):
+        self.logger.info("PlantillaChatbotBOT started")
         stream = EventStreams(streams="recentchange")
         stream.register_filter(
             wiki="eswiki",

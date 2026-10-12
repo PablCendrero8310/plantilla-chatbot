@@ -1,2 +1,6 @@
+from plantilla_chatbot.wikipedia.bot import PlantillaChatbotBOT
+
+
 def main() -> None:
-    print("Hello from plantilla-chatbot!")
+    bot = PlantillaChatbotBOT()
+    bot.run()
