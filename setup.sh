@@ -1,24 +1,31 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "🔧 Configurando entorno Python 3.13 para Toolforge..."
+echo "🔧 Configurando entorno Python 3.13 con uv para Toolforge..."
+
+# Instalar uv en el home si no está disponible
+if ! command -v uv &>/dev/null && [ ! -x "$HOME/.local/bin/uv" ]; then
+  echo "📥 Instalando uv en \$HOME/.local/bin..."
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
+# Asegurar que $HOME/.local/bin esté en el PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Verificar instalación
+echo "🐍 uv versión: $(uv --version)"
 
 # Eliminar venv existente
-rm -rf pyvenv
 
-# Crear nuevo venv con Python 3.13 explícito
-python3.13 -m venv pyvenv
+# Asegurar que uv gestione Python 3.13
+echo "⬇️  Instalando Python 3.13 con uv (si no está ya)..."
+# Activar (uv venv crea el activate igual que venv)
 
-# Activar
-source pyvenv/bin/activate
-
-# Actualizar pip, wheel y setuptools
-pip install -U pip wheel setuptools
-
-# Instala las dependencias del proyecto
+# Instalar dependencias del proyecto con uv pip
 echo "📦 Instalando dependencias..."
-pip install .
+uv sync
 
 echo "✅ Entorno Python 3.13 listo"
 echo "🐍 Versión: $(python --version)"
 echo "📂 Venv: $(which python)"
+echo "🛠️  uv: $(which uv)"
