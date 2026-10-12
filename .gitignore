@@ -2,9 +2,14 @@
 .venv/
 pyvenv/
 
+#Secrets
+.env
 # Python cache
 __pycache__/
 *.py[cod]
+#Wiki cache
+apicache/
+logs/
 
 # Test / lint caches
 .pytest_cache/
