@@ -5,7 +5,7 @@ WORKDIR /opt/tool
 
 # Copia archivos de configuración primero (mejor caché)
 COPY pyproject.toml ./
-COPY pyvenv_setup.sh .
+COPY setup.sh .
 
 # Da permisos al script
 RUN chmod +x setup.sh
