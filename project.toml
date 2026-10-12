@@ -1,3 +1,0 @@
-[[build.scripts]]
-name = "prebuild"
-script = "bash scripts/clone-filters.sh"
