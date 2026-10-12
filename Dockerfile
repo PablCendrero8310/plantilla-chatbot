@@ -5,6 +5,8 @@ WORKDIR /opt/tool
 
 # Copia archivos de configuración primero (mejor caché)
 COPY pyproject.toml ./
+COPY README.md .
+COPY src/ ./src/
 COPY setup.sh .
 
 # Da permisos al script
@@ -15,7 +17,6 @@ RUN chmod +x setup.sh
 RUN ./setup.sh
 
 # Copia el resto del código
-COPY src/ ./src/
 
 # Si tienes tests, cópialos también
 
