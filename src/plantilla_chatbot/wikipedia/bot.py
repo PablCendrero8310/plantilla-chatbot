@@ -56,7 +56,11 @@ class PlantillaChatbotBOT(SingleSiteBot):
         username: str = change.get("user", "")
         diff: int = change.get("length")["new"] - change.get("length")["old"]
         user_groups = self.retrieve_user(username).groups()
-        return diff > 0 and "autoconfirmed" not in user_groups
+        return (
+            diff > 0
+            and "autoconfirmed" not in user_groups
+            and username != self.site.username()
+        )
 
     def score(self, page: pywikibot.Page) -> float:
         text = page.get()
